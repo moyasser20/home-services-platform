@@ -1,4 +1,8 @@
 package com.example.userservice.application.usecase;
 
-public class LoginUseCase {
+import com.example.userservice.application.dto.LoginRequest;
+import com.example.userservice.application.dto.UserResponse;
+
+public interface LoginUseCase {
+    UserResponse login(LoginRequest request);
 }
