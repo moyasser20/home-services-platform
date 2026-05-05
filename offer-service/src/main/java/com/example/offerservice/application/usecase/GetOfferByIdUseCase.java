@@ -1,4 +1,7 @@
 package com.example.offerservice.application.usecase;
 
-public class GetOfferByIdUseCase {
+import com.example.offerservice.application.dto.OfferResponse;
+
+public interface GetOfferByIdUseCase {
+    OfferResponse getOfferById(Long id);
 }

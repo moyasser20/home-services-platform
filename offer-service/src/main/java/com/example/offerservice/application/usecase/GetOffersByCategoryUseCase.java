@@ -1,4 +1,9 @@
 package com.example.offerservice.application.usecase;
 
-public class GetOffersByCategoryUseCase {
+import com.example.offerservice.application.dto.OfferResponse;
+
+import java.util.List;
+
+public interface GetOffersByCategoryUseCase {
+    List<OfferResponse> getOffersByCategory(String category);
 }
