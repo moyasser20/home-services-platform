@@ -1,0 +1,15 @@
+com\example\bookingservice\repository\BookingRepository.class
+com\example\bookingservice\dto\CreateBookingRequest.class
+com\example\bookingservice\service\BookingServiceBean.class
+com\example\bookingservice\service\BookingValidationService.class
+com\example\bookingservice\api\BookingResource.class
+com\example\bookingservice\config\RestApplicationConfig.class
+com\example\bookingservice\client\UserClient.class
+com\example\bookingservice\dto\BookingResponse.class
+com\example\bookingservice\dto\OfferDetailsResponse.class
+com\example\bookingservice\exception\GlobalExceptionHandler.class
+com\example\bookingservice\client\OfferClient.class
+com\example\bookingservice\dto\UpdateBookingStatusRequest.class
+com\example\bookingservice\exception\BookingNotFoundException.class
+com\example\bookingservice\entity\BookingEntity.class
+com\example\bookingservice\exception\InsufficientBalanceException.class
