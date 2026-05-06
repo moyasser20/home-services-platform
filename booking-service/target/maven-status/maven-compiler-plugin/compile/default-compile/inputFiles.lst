@@ -6,6 +6,7 @@ C:\Users\ALRWOAD LAPTOB\IdeaProjects\home-services-platform\booking-service\src\
 C:\Users\ALRWOAD LAPTOB\IdeaProjects\home-services-platform\booking-service\src\main\java\com\example\bookingservice\dto\CreateBookingRequest.java
 C:\Users\ALRWOAD LAPTOB\IdeaProjects\home-services-platform\booking-service\src\main\java\com\example\bookingservice\dto\OfferDetailsResponse.java
 C:\Users\ALRWOAD LAPTOB\IdeaProjects\home-services-platform\booking-service\src\main\java\com\example\bookingservice\dto\UpdateBookingStatusRequest.java
+C:\Users\ALRWOAD LAPTOB\IdeaProjects\home-services-platform\booking-service\src\main\java\com\example\bookingservice\dto\UserSummaryResponse.java
 C:\Users\ALRWOAD LAPTOB\IdeaProjects\home-services-platform\booking-service\src\main\java\com\example\bookingservice\entity\BookingEntity.java
 C:\Users\ALRWOAD LAPTOB\IdeaProjects\home-services-platform\booking-service\src\main\java\com\example\bookingservice\exception\BookingNotFoundException.java
 C:\Users\ALRWOAD LAPTOB\IdeaProjects\home-services-platform\booking-service\src\main\java\com\example\bookingservice\exception\GlobalExceptionHandler.java

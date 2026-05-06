@@ -39,4 +39,23 @@ public class BookingRepository {
                 .setParameter("customerId", customerId)
                 .getResultList();
     }
+
+    public List<BookingEntity> findByProviderId(Long providerId) {
+        return entityManager.createQuery(
+                        "SELECT b FROM BookingEntity b WHERE b.providerId = :providerId ORDER BY b.createdAt DESC",
+                        BookingEntity.class
+                )
+                .setParameter("providerId", providerId)
+                .getResultList();
+    }
+
+    public List<BookingEntity> findByProviderIdAndStatus(Long providerId, String status) {
+        return entityManager.createQuery(
+                        "SELECT b FROM BookingEntity b WHERE b.providerId = :providerId AND b.status = :status ORDER BY b.createdAt DESC",
+                        BookingEntity.class
+                )
+                .setParameter("providerId", providerId)
+                .setParameter("status", status)
+                .getResultList();
+    }
 }

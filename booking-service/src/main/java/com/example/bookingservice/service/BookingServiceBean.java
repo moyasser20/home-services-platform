@@ -5,6 +5,8 @@ import com.example.bookingservice.client.UserClient;
 import com.example.bookingservice.dto.BookingResponse;
 import com.example.bookingservice.dto.CreateBookingRequest;
 import com.example.bookingservice.dto.OfferDetailsResponse;
+import com.example.bookingservice.dto.UpdateBookingStatusRequest;
+import com.example.bookingservice.dto.UserSummaryResponse;
 import com.example.bookingservice.entity.BookingEntity;
 import com.example.bookingservice.exception.BookingNotFoundException;
 import com.example.bookingservice.exception.InsufficientBalanceException;
@@ -76,7 +78,35 @@ public class BookingServiceBean {
                 .toList();
     }
 
+    public List<BookingResponse> getBookingsByProvider(Long providerId) {
+        return bookingRepository.findByProviderId(providerId)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<BookingResponse> getCompletedBookingsByProvider(Long providerId) {
+        return bookingRepository.findByProviderIdAndStatus(providerId, "COMPLETED")
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public BookingResponse updateBookingStatus(Long bookingId, UpdateBookingStatusRequest request) {
+        if (request == null || request.getStatus() == null || request.getStatus().isBlank()) {
+            throw new RuntimeException("status is required");
+        }
+
+        BookingEntity booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found with id: " + bookingId));
+        booking.setStatus(request.getStatus().trim().toUpperCase());
+        BookingEntity updated = bookingRepository.save(booking);
+        return toResponse(updated);
+    }
+
     private BookingResponse toResponse(BookingEntity booking) {
+        UserSummaryResponse customer = userClient.getUserById(booking.getCustomerId());
+        UserSummaryResponse provider = userClient.getUserById(booking.getProviderId());
         return new BookingResponse(
                 booking.getId(),
                 booking.getCustomerId(),
@@ -85,7 +115,9 @@ public class BookingServiceBean {
                 booking.getCategory(),
                 booking.getPrice(),
                 booking.getStatus(),
-                booking.getCreatedAt()
+                booking.getCreatedAt(),
+                customer != null ? customer.getUsername() : null,
+                provider != null ? provider.getUsername() : null
         );
     }
 }

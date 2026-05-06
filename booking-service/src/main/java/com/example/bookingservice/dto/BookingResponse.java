@@ -12,11 +12,13 @@ public class BookingResponse {
     private BigDecimal price;
     private String status;
     private LocalDateTime createdAt;
+    private String customerName;
+    private String providerName;
 
     public BookingResponse() {
     }
 
-    public BookingResponse(Long id, Long customerId, Long providerId, Long offerId, String category, BigDecimal price, String status, LocalDateTime createdAt) {
+    public BookingResponse(Long id, Long customerId, Long providerId, Long offerId, String category, BigDecimal price, String status, LocalDateTime createdAt, String customerName, String providerName) {
         this.id = id;
         this.customerId = customerId;
         this.providerId = providerId;
@@ -25,6 +27,8 @@ public class BookingResponse {
         this.price = price;
         this.status = status;
         this.createdAt = createdAt;
+        this.customerName = customerName;
+        this.providerName = providerName;
     }
 
     public Long getId() {
@@ -59,6 +63,14 @@ public class BookingResponse {
         return createdAt;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public String getProviderName() {
+        return providerName;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -89,5 +101,13 @@ public class BookingResponse {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
     }
 }

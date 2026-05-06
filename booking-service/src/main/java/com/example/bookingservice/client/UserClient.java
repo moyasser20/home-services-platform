@@ -1,9 +1,12 @@
 package com.example.bookingservice.client;
 
+import com.example.bookingservice.dto.UserSummaryResponse;
 import jakarta.ejb.Stateless;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
 
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -35,6 +38,31 @@ public class UserClient {
             return response.statusCode() >= 200 && response.statusCode() < 300;
         } catch (Exception ex) {
             return false;
+        }
+    }
+
+    public UserSummaryResponse getUserById(Long userId) {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(USER_SERVICE_URL + userId))
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() < 200 || response.statusCode() >= 300) {
+                return null;
+            }
+
+            try (JsonReader reader = Json.createReader(new StringReader(response.body()))) {
+                JsonObject json = reader.readObject();
+                UserSummaryResponse user = new UserSummaryResponse();
+                user.setId(json.getJsonNumber("id").longValue());
+                user.setUsername(json.getString("username", null));
+                user.setRole(json.getString("role", null));
+                return user;
+            }
+        } catch (Exception ex) {
+            return null;
         }
     }
 }

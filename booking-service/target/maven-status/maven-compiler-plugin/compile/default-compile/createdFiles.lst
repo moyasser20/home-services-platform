@@ -1,5 +1,6 @@
 com\example\bookingservice\repository\BookingRepository.class
 com\example\bookingservice\dto\CreateBookingRequest.class
+com\example\bookingservice\dto\UserSummaryResponse.class
 com\example\bookingservice\service\BookingServiceBean.class
 com\example\bookingservice\service\BookingValidationService.class
 com\example\bookingservice\api\BookingResource.class
