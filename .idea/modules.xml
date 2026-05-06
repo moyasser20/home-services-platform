@@ -3,8 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/home-services-platform.iml" filepath="$PROJECT_DIR$/.idea/home-services-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notification-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/notification-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/notification-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/notification-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/offer-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/offer-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/offer-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/offer-service.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/user-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/user-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wallet-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wallet-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/wallet-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/wallet-service.test.iml" />
     </modules>
   </component>
 </project>

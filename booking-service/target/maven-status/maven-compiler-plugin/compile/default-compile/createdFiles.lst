@@ -8,6 +8,7 @@ com\example\bookingservice\client\UserClient.class
 com\example\bookingservice\dto\BookingResponse.class
 com\example\bookingservice\dto\OfferDetailsResponse.class
 com\example\bookingservice\exception\GlobalExceptionHandler.class
+com\example\bookingservice\RestApplication.class
 com\example\bookingservice\client\OfferClient.class
 com\example\bookingservice\dto\UpdateBookingStatusRequest.class
 com\example\bookingservice\exception\BookingNotFoundException.class

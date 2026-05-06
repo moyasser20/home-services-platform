@@ -1,15 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+
   <persistence-unit name="bookingPU" transaction-type="JTA">
+
+    <jta-data-source>java:/PostgresDS</jta-data-source>
+
     <class>com.example.bookingservice.entity.BookingEntity</class>
+
     <properties>
-      <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/home_services_platform_booking_db"/>
-      <property name="jakarta.persistence.jdbc.user" value="postgres"/>
-      <property name="jakarta.persistence.jdbc.password" value="12345678"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
     </properties>
+
   </persistence-unit>
+
 </persistence>
