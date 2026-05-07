@@ -16,6 +16,7 @@ public class UpdateOfferRequest {
 
     @NotNull
     private Boolean active;
+    private String category;
 
     public BigDecimal getPrice() {
         return price;
@@ -29,6 +30,10 @@ public class UpdateOfferRequest {
         return active;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -39,5 +44,9 @@ public class UpdateOfferRequest {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

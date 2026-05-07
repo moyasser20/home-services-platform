@@ -19,6 +19,16 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(DuplicateCategoryException.class)
+    public ResponseEntity<?> handleDuplicateCategoryException(DuplicateCategoryException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidCategoryException.class)
+    public ResponseEntity<?> handleInvalidCategoryException(InvalidCategoryException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex) {
         Map<String, Object> error = baseErrorBody("Validation failed");

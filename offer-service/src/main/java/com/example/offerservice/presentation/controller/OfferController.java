@@ -1,9 +1,13 @@
 package com.example.offerservice.presentation.controller;
 
 import com.example.offerservice.application.dto.CreateOfferRequest;
+import com.example.offerservice.application.dto.CategoryResponse;
+import com.example.offerservice.application.dto.CreateCategoryRequest;
 import com.example.offerservice.application.dto.OfferResponse;
 import com.example.offerservice.application.dto.UpdateOfferRequest;
+import com.example.offerservice.application.usecase.CreateCategoryUseCase;
 import com.example.offerservice.application.usecase.CreateOfferUseCase;
+import com.example.offerservice.application.usecase.GetAllCategoriesUseCase;
 import com.example.offerservice.application.usecase.GetAllActiveOffersUseCase;
 import com.example.offerservice.application.usecase.GetOfferByIdUseCase;
 import com.example.offerservice.application.usecase.GetOffersByCategoryUseCase;
@@ -22,19 +26,25 @@ public class OfferController {
     private final GetOffersByCategoryUseCase getOffersByCategoryUseCase;
     private final GetOfferByIdUseCase getOfferByIdUseCase;
     private final UpdateOfferUseCase updateOfferUseCase;
+    private final CreateCategoryUseCase createCategoryUseCase;
+    private final GetAllCategoriesUseCase getAllCategoriesUseCase;
 
     public OfferController(
             CreateOfferUseCase createOfferUseCase,
             GetAllActiveOffersUseCase getAllActiveOffersUseCase,
             GetOffersByCategoryUseCase getOffersByCategoryUseCase,
             GetOfferByIdUseCase getOfferByIdUseCase,
-            UpdateOfferUseCase updateOfferUseCase
+            UpdateOfferUseCase updateOfferUseCase,
+            CreateCategoryUseCase createCategoryUseCase,
+            GetAllCategoriesUseCase getAllCategoriesUseCase
     ) {
         this.createOfferUseCase = createOfferUseCase;
         this.getAllActiveOffersUseCase = getAllActiveOffersUseCase;
         this.getOffersByCategoryUseCase = getOffersByCategoryUseCase;
         this.getOfferByIdUseCase = getOfferByIdUseCase;
         this.updateOfferUseCase = updateOfferUseCase;
+        this.createCategoryUseCase = createCategoryUseCase;
+        this.getAllCategoriesUseCase = getAllCategoriesUseCase;
     }
 
     @PostMapping
@@ -60,6 +70,18 @@ public class OfferController {
     @PutMapping("/{id}")
     public OfferResponse updateOffer(@PathVariable Long id, @Valid @RequestBody UpdateOfferRequest request) {
         return updateOfferUseCase.updateOffer(id, request);
+    }
+
+    // Admin-only endpoint (basic auth in security config)
+    @PostMapping("/categories")
+    public CategoryResponse createCategory(@Valid @RequestBody CreateCategoryRequest request) {
+        return createCategoryUseCase.createCategory(request);
+    }
+
+    // Admin-only endpoint (basic auth in security config)
+    @GetMapping("/categories")
+    public List<CategoryResponse> getAllCategories() {
+        return getAllCategoriesUseCase.getAllCategories();
     }
 
     @GetMapping("/health")
