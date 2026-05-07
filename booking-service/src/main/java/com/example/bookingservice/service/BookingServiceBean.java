@@ -2,23 +2,29 @@ package com.example.bookingservice.service;
 
 import com.example.bookingservice.client.OfferClient;
 import com.example.bookingservice.client.UserClient;
+import com.example.bookingservice.config.RabbitMqPublisher;
 import com.example.bookingservice.dto.BookingResponse;
+import com.example.bookingservice.dto.BookingConfirmedEvent;
 import com.example.bookingservice.dto.CreateBookingRequest;
+import com.example.bookingservice.dto.BookingFailedEvent;
 import com.example.bookingservice.dto.OfferDetailsResponse;
 import com.example.bookingservice.dto.UpdateBookingStatusRequest;
 import com.example.bookingservice.dto.UserSummaryResponse;
 import com.example.bookingservice.entity.BookingEntity;
 import com.example.bookingservice.exception.BookingNotFoundException;
 import com.example.bookingservice.exception.InsufficientBalanceException;
+import com.example.bookingservice.exception.OfferUnavailableException;
 import com.example.bookingservice.repository.BookingRepository;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Stateless
 public class BookingServiceBean {
+    private static final Logger LOGGER = Logger.getLogger(BookingServiceBean.class.getName());
 
     @EJB
     private BookingRepository bookingRepository;
@@ -31,31 +37,47 @@ public class BookingServiceBean {
 
     @EJB
     private BookingValidationService bookingValidationService;
+    @EJB
+    private RabbitMqPublisher rabbitMqPublisher;
 
     public BookingResponse createBooking(CreateBookingRequest request) {
-        bookingValidationService.validateCreateRequest(request);
+        OfferDetailsResponse offer = null;
+        try {
+            bookingValidationService.validateCreateRequest(request);
 
-        OfferDetailsResponse offer = offerClient.getOfferById(request.getOfferId());
-        if (!offer.isActive()) {
-            throw new RuntimeException("Selected offer is not active");
+            offer = offerClient.getOfferById(request.getOfferId());
+            if (!offer.isActive()) {
+                throw new OfferUnavailableException("Selected offer is not active");
+            }
+
+            boolean offerAlreadyBooked = bookingRepository.existsByOfferIdAndStatus(request.getOfferId(), "CONFIRMED");
+            if (offerAlreadyBooked) {
+                throw new OfferUnavailableException("Offer is already booked and unavailable");
+            }
+
+            boolean deducted = userClient.deductBalance(request.getCustomerId(), offer.getPrice());
+            if (!deducted) {
+                throw new InsufficientBalanceException("Insufficient balance to complete booking");
+            }
+
+            BookingEntity booking = new BookingEntity();
+            booking.setCustomerId(request.getCustomerId());
+            booking.setOfferId(offer.getId());
+            booking.setProviderId(offer.getProviderId());
+            booking.setCategory(offer.getCategory());
+            booking.setPrice(offer.getPrice());
+            booking.setStatus("CONFIRMED");
+            booking.setCreatedAt(LocalDateTime.now());
+
+            BookingEntity saved = bookingRepository.save(booking);
+            LOGGER.info("Before publishing confirmed booking event for bookingId=" + saved.getId());
+            publishConfirmedEvent(saved);
+            return toResponse(saved);
+        } catch (RuntimeException ex) {
+            LOGGER.info("Before publishing failed booking event. reason=" + ex.getMessage());
+            publishFailedEvent(request, offer, ex.getMessage());
+            throw ex;
         }
-
-        boolean deducted = userClient.deductBalance(request.getCustomerId(), offer.getPrice());
-        if (!deducted) {
-            throw new InsufficientBalanceException("Insufficient balance to complete booking");
-        }
-
-        BookingEntity booking = new BookingEntity();
-        booking.setCustomerId(request.getCustomerId());
-        booking.setOfferId(offer.getId());
-        booking.setProviderId(offer.getProviderId());
-        booking.setCategory(offer.getCategory());
-        booking.setPrice(offer.getPrice());
-        booking.setStatus("CONFIRMED");
-        booking.setCreatedAt(LocalDateTime.now());
-
-        BookingEntity saved = bookingRepository.save(booking);
-        return toResponse(saved);
     }
 
     public List<BookingResponse> getAllBookings() {
@@ -119,5 +141,25 @@ public class BookingServiceBean {
                 customer != null ? customer.getUsername() : null,
                 provider != null ? provider.getUsername() : null
         );
+    }
+
+    private void publishConfirmedEvent(BookingEntity booking) {
+        BookingConfirmedEvent event = new BookingConfirmedEvent();
+        event.setBookingId(booking.getId());
+        event.setCustomerId(booking.getCustomerId());
+        event.setProviderId(booking.getProviderId());
+        event.setStatus(booking.getStatus());
+        event.setMessage("Booking confirmed successfully");
+        rabbitMqPublisher.publishConfirmed(event);
+    }
+
+    private void publishFailedEvent(CreateBookingRequest request, OfferDetailsResponse offer, String message) {
+        BookingFailedEvent event = new BookingFailedEvent();
+        event.setBookingId(null);
+        event.setCustomerId(request != null ? request.getCustomerId() : null);
+        event.setProviderId(offer != null ? offer.getProviderId() : null);
+        event.setStatus("FAILED");
+        event.setMessage(message == null ? "Booking failed" : message);
+        rabbitMqPublisher.publishFailed(event);
     }
 }

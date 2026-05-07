@@ -58,4 +58,15 @@ public class BookingRepository {
                 .setParameter("status", status)
                 .getResultList();
     }
+
+    public boolean existsByOfferIdAndStatus(Long offerId, String status) {
+        Long count = entityManager.createQuery(
+                        "SELECT COUNT(b) FROM BookingEntity b WHERE b.offerId = :offerId AND b.status = :status",
+                        Long.class
+                )
+                .setParameter("offerId", offerId)
+                .setParameter("status", status)
+                .getSingleResult();
+        return count != null && count > 0;
+    }
 }

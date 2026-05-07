@@ -19,6 +19,9 @@ public class GlobalExceptionHandler implements ExceptionMapper<RuntimeException>
         if (exception instanceof InsufficientBalanceException) {
             return build(Response.Status.BAD_REQUEST, exception.getMessage());
         }
+        if (exception instanceof OfferUnavailableException) {
+            return build(Response.Status.BAD_REQUEST, exception.getMessage());
+        }
         return build(Response.Status.BAD_REQUEST, exception.getMessage());
     }
 
