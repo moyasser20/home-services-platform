@@ -1,0 +1,52 @@
+{
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "booking.events.exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "booking.confirmed.queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "booking.failed.queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "booking.events.exchange",
+      "vhost": "/",
+      "destination": "booking.confirmed.queue",
+      "destination_type": "queue",
+      "routing_key": "booking.confirmed",
+      "arguments": {}
+    },
+    {
+      "source": "booking.events.exchange",
+      "vhost": "/",
+      "destination": "booking.failed.queue",
+      "destination_type": "queue",
+      "routing_key": "booking.failed",
+      "arguments": {}
+    }
+  ]
+}
